@@ -3,7 +3,7 @@ import { FileSystemItem } from '../fileSystem/fileSystem';
 export const getAutocompleteSuggestions = (
   input: string,
 ): string[] => {
-  const commands = ['compgen', 'help', 'clear', 'ls', 'cd', 'cat', 'man', 'history', 'date', 'github', 'setbg'];
+  const commands = ['compgen', 'help', 'clear', 'ls', 'cd', 'cat', 'man', 'history', 'date', 'github', 'setbg', 'setfg'];
   const suggestions = commands.filter((command) => command.startsWith(input));
 
   // const currentDirectoryItems = currentDirectory

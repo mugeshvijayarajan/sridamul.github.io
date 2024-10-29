@@ -2,7 +2,7 @@ import { fileSystem, FileSystemItem } from '../fileSystem/fileSystem';
 import { addCommandToHistory, getCommandHistory, navigateHistory } from './historyManager';
 import { marked } from 'marked';
 
-type Command = 'compgen' | 'help' | 'clear' | 'ls' | 'cd' | 'cat' | 'man' | 'history' | 'date' | 'github' | 'setbg';
+type Command = 'compgen' | 'help' | 'clear' | 'ls' | 'cd' | 'cat' | 'man' | 'history' | 'date' | 'github' | 'setbg' | 'setfg';
 
 const compgenHelpText = `<span style="color: #FFFF00;">cat</span>
 <span style="color: #FFFF00;">cd</span>
@@ -14,7 +14,8 @@ const compgenHelpText = `<span style="color: #FFFF00;">cat</span>
 <span style="color: #FFFF00;">help</span>
 <span style="color: #FFFF00;">ls</span>
 <span style="color: #FFFF00;">man</span>
-<span style="color: #FFFF00;">setbg</span>`;
+<span style="color: #FFFF00;">setbg</span>
+<span style="color: #FFFF00;">setfg</span>`;
 
 const commands: Record<Command, string | null> = {
   compgen: compgenHelpText,
@@ -28,6 +29,7 @@ const commands: Record<Command, string | null> = {
   date: null,
   github: null,
   setbg: null,
+  setfg: null,
 };
 
 const manPages: Record<string, string> = {
@@ -41,7 +43,8 @@ const manPages: Record<string, string> = {
   history: 'Displays the list of history of commands used.',
   date: 'Displays the current date and time.',
   github: 'Opens the GitHub page in a new tab.',
-  setbg: 'Changes the background color of the terminal. Usage: setBg &lt;color&gt;',
+  setbg: 'Changes the background color of the terminal. Usage: setbg &lt;color&gt;',
+  setfg: 'Changes the foreground color of the terminal. Usage: setfg &lt;color&gt;',
 };
 
 const isCommand = (command: string): command is Command => {
@@ -169,11 +172,18 @@ export const getResponseForCommand = async (command: string): Promise<string | n
         return 'Redirecting to GitHub page... If not redirected, click <a href="https://github.com/sridamul" target="_blank">here</a>.';
       }
       case 'setbg': {
-        if (args.length !== 1) return "Usage: setBg &lt;color&gt;";
+        if (args.length !== 1) return "Usage: setbg &lt;color&gt;";
 
         const color = args[0];
         document.documentElement.style.setProperty('--terminal-bg-color', color);
         return `Background color changed to ${color}`;
+      }
+      case 'setfg': {
+        if (args.length !== 1) return "Usage: setfg &lt;color&gt;";
+
+        const color = args[0];
+        document.documentElement.style.setProperty('--terminal-fg-color', color);
+        return `Foreground color changed to ${color}`;
       }
       case 'compgen':
       case 'help':
